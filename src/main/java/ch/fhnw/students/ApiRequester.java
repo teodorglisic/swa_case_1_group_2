@@ -13,6 +13,7 @@ import java.net.http.HttpResponse;
 public class ApiRequester {
 
     public static void main(String[] args) {
+        // Manueller Test ob API läuft
         JSONObject object = apiRequester("Olten, Rigenbachstrasse 16", "hallo", "welt", 500L);
         System.out.println(object);
     }
@@ -28,7 +29,7 @@ public class ApiRequester {
             jsonBody.put("recepientPhone", customerPhone);
             jsonBody.put("weight", weight);
 
-            System.out.println(jsonBody);
+            System.out.println("Received body: " + jsonBody);
 
             HttpRequest request = HttpRequest
                     .newBuilder()
