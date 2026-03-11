@@ -14,8 +14,44 @@ public class ApiRequester {
 
     public static void main(String[] args) {
         // Manueller Test ob API läuft
-        JSONObject object = apiRequester("Olten, Rigenbachstrasse 16", "hallo", "welt", 500L);
+        //JSONObject object = apiRequester("Olten, Rigenbachstrasse 16", "hallo", "welt", 500L);
+        JSONObject object = selectCourierAPI("RS", 250L);
         System.out.println(object);
+    }
+
+    public static JSONObject selectCourierAPI(String country, Long weight) {
+        try (HttpClient client = HttpClient.newHttpClient()){
+
+
+            JSONObject jsonBody = new JSONObject();
+
+            jsonBody.put("weight", weight);
+            jsonBody.put("destination", country);
+
+            System.out.println("Received body: " + jsonBody);
+
+            HttpRequest request = HttpRequest
+                    .newBuilder()
+                    .uri(new URI("http://localhost:8080/deliveryRuleManager"))
+                    .header("Content-Type", "application/json")
+                    .POST(HttpRequest.BodyPublishers.ofString(String.valueOf(jsonBody)))
+                    .build();
+
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+            if (response.statusCode() == 202) {
+                JSONObject responseBody = new JSONObject(response.body());
+                responseBody.put("statusCode", response.statusCode());
+                return responseBody;
+            } else {
+                JSONObject responseBody = new JSONObject(response.body());
+                responseBody.put("statusCode", response.statusCode());
+                return responseBody;
+            }
+
+        } catch (URISyntaxException | IOException | InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public static JSONObject apiRequester(String street, String customerId, String customerPhone, Long weight) {
