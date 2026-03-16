@@ -56,7 +56,7 @@ public class ServiceTaskWorker {
                 (externalTask, externalTaskService) -> {
                     String street = (String) externalTask.getVariable("deliveryAddressStreet");
                     Long houseNumber = (Long) externalTask.getVariable("deliveryAddressHouseNumber");
-                    Long postalCode = (Long) externalTask.getVariable("deliveryPostalCode");
+                    String postalCode = (String) externalTask.getVariable("deliveryPostalCode");
                     String city = (String) externalTask.getVariable("deliveryCity");
                     String country = (String) externalTask.getVariable("deliveryCountry");
                     String phone = (String) externalTask.getVariable("customerPhone");
@@ -89,6 +89,13 @@ public class ServiceTaskWorker {
                     }
 
                     externalTaskService.complete(externalTask, result);
+
+        }).open();
+
+
+        // Service task für Protokollierung in SQL
+        client.subscribe("group2_sqlProtocolling").lockDuration(1000).handler(
+                (externalTask, externalTaskService) -> {
 
         }).open();
     }
